@@ -8,9 +8,10 @@ tags:
   - "#Development"
 ---
 
-Let's recap what we have done here with parts 1 & 2. We have a server that parses markdown files, we are rendering html templates and showing each post, we are then coverting the markdown into HTML and showing that to the user. We can still improve things quite a bit.
 
-As it stands our server starts up but you would have no idea. Let's add some code to the `main.go` file that shows what port our server is running on.
+Let's recap what we have done so far in Parts 1 and 2. We have a server that parses markdown files, renders HTML templates, and displays each post. We are converting the markdown into HTML and showing that to the user. There is still plenty of room for improvement.
+
+As it stands, our server starts up but you would have no idea. Let's add some code to the `main.go` file that shows what port our server is running on.
 
 Add this line right above the call to the `listenAndServe()` function at the bottom of the `main.go`
 
@@ -18,11 +19,11 @@ Add this line right above the call to the `listenAndServe()` function at the bot
 fmt.Printf("starting server on port :%d\n", cfg.port)
 ```
 
-Now when we launch our server we will actually see the port that it is running on.
+Now, when we launch our server, we will actually see the port that it is running on.
 
 ## Adding some style
 
-This blog is in need of styling. I am about as far as it get from being a decent designer, I have zero creative ability and I am color blind to boot. Don't get your hopes up that this site is going to be anything special. Open up the `index.tmpl` and add the following code.
+This blog is in need of styling. I am about as far as it gets from being a decent designer—I have zero creative ability and I am color blind to boot. Don't get your hopes up that this site is going to be anything special. Open up the `index.tmpl` and add the following code:
 
 ```html
 <!DOCTYPE html>
@@ -101,11 +102,11 @@ This blog is in need of styling. I am about as far as it get from being a decent
 </html>
 ```
 
-Go ahead and look at the changes, you should see something that looks a little bit better.
+Go ahead and look at the changes. You should see something that looks a little bit better.
 
-We have some issues now. Can you spot them? It is quite a bit more obvious now that we have a dark theme. The issue is we are not rendering a template when we go to a blog post, instead we just get some unstyled html. The reason for this is because we are simply outputting HTML from the markdown content. It is not part of our template set and not getting the styles we added.
+We have some issues now. Can you spot them? It is quite a bit more obvious now that we have a dark theme. The issue is that we are not rendering a template when we go to a blog post; instead, we just get some unstyled HTML. The reason for this is because we are simply outputting HTML from the markdown content. It is not part of our template set and is not getting the styles we added.
 
-There are a few ways to solve for this, but the easiest is to just create a structure that will likely be used for future projects.
+There are a few ways to solve this, but the easiest is to just create a structure that will likely be used for future projects.
 
 In the terminal create two more `.tmpl` files. We will then create a template folder and move all of our templates into that folder.
 
@@ -181,18 +182,18 @@ project-root/
 
 We have made some big changes here...
 
-We have modified our template structure to contain a base template, a home template and a post template. The home and base template will render togehter as a template set, as does the post and base template. A couple of key items to note...
+We have modified our template structure to contain a base template, a home template, and a post template. The home and base templates will render together as a template set, as will the post and base templates. A couple of key items to note:
 
 * `{{define "content"}}` defines a template called content
 * `{{template "content" .}}` calls a defined template called `content` and passes the `context` or `dot operator`. All of this is a fancy way to say data. We are going to pass a struct into the template.
-* If you do pass a struct the fields need to be exported (upper case)
+* If you do pass a struct, the fields need to be exported (start with an uppercase letter)
 * The call to `{{.Content}}` is a call to the `Content` field in the struct (it is poorly named considering our template names)
-* Template parsing order matters! You want to parse the base template first as that template calls on other templates.
+* Template parsing order matters! You want to parse the base template first, as that template calls on other templates.
 * `log.Fatal()` will exit if an error is thrown. Seems appropriate considering all this app does is render markdown content.
 
 Moving on...
 
-We need to make some modifications to our `main.go` file as we have 3 templates and the way that each needs to be parsed. Go to `main.go` and make these changes.
+We need to make some modifications to our `main.go` file, as we have three templates and each needs to be parsed in a specific way. Go to `main.go` and make these changes:
 
 ```go
 // create a home template set by parsing both base and home
@@ -214,9 +215,9 @@ We need to make some modifications to our `main.go` file as we have 3 templates 
  }
 ```
 
-We are creating two template sets. Our `home` template set that generates a template out of both the `home.tmpl` and `base.tmpl` files, as well as a `post` template set generated from `post.tmpl` and `base.tmpl`. This ensures when we go to render our markdown content in the post template, we have our styling applied from the base template.
+We are creating two template sets: our `home` template set, which generates a template out of both the `home.tmpl` and `base.tmpl` files, and a `post` template set generated from `post.tmpl` and `base.tmpl`. This ensures that when we render our markdown content in the post template, we have our styling applied from the base template.
 
-Now in our `/` route handler make these changes
+Now, in our `/` route handler, make these changes:
 
 ```go
  // handler for default / route
@@ -227,7 +228,7 @@ Now in our `/` route handler make these changes
  })
 ```
 
-Let's create a simple helper that helps create a title for our post pages. This simply takes in the slug, strips any file extensions, dashes and puts it in title case. We will use this to pass into our template's title field.
+Let's create a simple helper that helps create a title for our post pages. This simply takes in the slug, strips any file extensions and dashes, and puts it in title case. We will use this to pass into our template's title field.
 
 ```go
 func slugToTitle(slug string) string {
@@ -238,13 +239,13 @@ func slugToTitle(slug string) string {
 }
 ```
 
-Note that the cases package is not part of the standard library. You will need to add the package with this command
+Note that the `cases` package is not part of the standard library. You will need to add the package with this command:
 
 ```bash
 go get golang.org/x/text/cases
 ```
 
-And make this change in our `/post/{slug}` handler
+And make this change in our `/posts/{slug}` handler:
 
 ```go
 // handler for /posts/slug route
@@ -282,10 +283,10 @@ And make this change in our `/post/{slug}` handler
  })
 ```
 
-That should be all the changes. We should have a working solution that now has our styles in both our home page and our posts. I hope these posts give you an idea of what you can do here. Some suggestions for improvement
+That should be all the changes. We should have a working solution that now has our styles in both our home page and our posts. I hope these posts give you an idea of what you can do here. Some suggestions for improvement:
 
-* We have no tests, we should be testing the handlers and ensuring they render our content
-* There is a ton of neat futures with Markdown parsing, stuff like Frontmatter, and code highlighting. If we added FrontMatter to these posts, it would likely break things.
-* If you wanted things to be more flexible regarding styling, you could add a configuration file in json or toml and read the configuration into a struct, then direct it to various style sheets or html layouts.
+* We have no tests; we should be testing the handlers and ensuring they render our content
+* There are a ton of neat features with Markdown parsing, such as Frontmatter and code highlighting. If we added Frontmatter to these posts, it would likely break things.
+* If you wanted things to be more flexible regarding styling, you could add a configuration file in JSON or TOML and read the configuration into a struct, then direct it to various style sheets or HTML layouts.
 
-I have one last post where we will do a little extra credit. We will add testing, refactor our code a little bit and add Frontmatter support.
+I have one last post where we will do a little extra credit. We will add testing, refactor our code a little bit, and add Frontmatter support.

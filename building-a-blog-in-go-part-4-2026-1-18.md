@@ -115,9 +115,9 @@ func TestReadMarkDown(t *testing.T) {
 }
 ```
 
-That helped clean things up a bit and has provided us a helper function that we can reuse in the future.
+That helped clean things up a bit and has provided us with a helper function that we can reuse in the future.
 
-Let's also tackle our handlers... if you made it this far, we have made some mistakes for the sake of simplicity. The handlers we have written are simply running out of the main function. How do you functions being called out of main? The answer here is to clean up our app a little bit and make it more testable.
+Let's also tackle our handlers... If you made it this far, we have made some mistakes for the sake of simplicity. The handlers we have written are simply running out of the main function. How do you feel about functions being called out of main? The answer here is to clean up our app a little bit and make it more testable.
 
 Let's move our handlers out of main function. Go ahead and create two new files in the root of the project, `routes.go`, `handlers.go`, & `helpers.go`.
 
@@ -125,7 +125,7 @@ Let's move our handlers out of main function. Go ahead and create two new files 
 touch routes.go handlers.go helpers.go
 ```
 
-Let's start with our `helpers.go`. With this `helpers.go` file I wanted to take a moment to clean up the overall project and have the `main()` function be as slimmer. Let's move both `readMarkdown()` and `stringToTitle()` functions from `main.go` to `helpers.go`. If that sounded confusing, just make sure `helpers.go` looks like this.
+Let's start with our `helpers.go`. With this file, I wanted to take a moment to clean up the overall project and have the `main()` function be slimmer. Let's move both `readMarkdown()` and `slugToTitle()` functions from `main.go` to `helpers.go`. If that sounded confusing, just make sure `helpers.go` looks like this:
 
 ```go
 package main

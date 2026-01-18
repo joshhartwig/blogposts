@@ -1,7 +1,7 @@
 ---
 title: "Automating Deployment with Docker, Containers and Github Actions"
 date: 2026-1-18
-summary: "We have built this blog but lets make it easy to deploy on a VPS, Linux server or even another development box. We are going to containerize the blog, create a Docker Compose to test locally and then create a github action that updates the container registry on every push to main"
+summary: "We have built this blog, but let's make it easy to deploy on a VPS, Linux server, or even another development box. We are going to containerize the blog, create a Docker Compose file to test locally, and then create a GitHub Action that updates the container registry on every push to main."
 draft: false
 tags:
   - "#Go"
@@ -9,17 +9,18 @@ tags:
   - "DevOps"
 ---
 
+
 Time to make this easy to deploy
 
-You put in all the time and effort to build this thing, why not take a little bit more time and effort to make it easy to deploy. In this post we are going to turn this project into a 'distroless' Docker container, make sure it works locally, then create a pipeline that ensures that all commits to main are replicated to our Docker image in the Github Container Registry. The end result of this is that you can create a Docker Compose file on any type of server and have your container running locally within 30 seconds. Sound good? Let's get going.
+You put in all the time and effort to build this thing, so why not take a little bit more time and effort to make it easy to deploy? In this post, we are going to turn this project into a 'distroless' Docker container, make sure it works locally, then create a pipeline that ensures all commits to main are replicated to our Docker image in the GitHub Container Registry. The end result is that you can create a Docker Compose file on any type of server and have your container running locally within 30 seconds. Sound good? Let's get going.
 
-Let's start with creating a new Dockerfile
+Let's start by creating a new Dockerfile.
 
 ```bash
 touch Dockerfile
 ```
 
-Now copy the following into the `Dockerfile`
+Now copy the following into the `Dockerfile`:
 
 ```Dockerfile
 # ---- build stage ----
@@ -43,6 +44,7 @@ WORKDIR /app
 
 COPY --from=build /out/blogo /app/blogo
 
+
 # No need to copy ui/static or ui/templates, as they are embedded in the binary
 
 # Optional: bake default content too (handy for first run)
@@ -50,16 +52,17 @@ COPY content /app/content
 
 EXPOSE 3999
 USER nonroot:nonroot
+
 ENTRYPOINT ["/app/blogo"]
 ```
 
-Let's explain what this does... The Dockerfile has two stages
+Let's explain what this does... The Dockerfile has two stages:
 
 1. Build Stage
 
-* Use the official Go image to compile your Go app.
-* Setup a working directory.
-* Downloads dependencies (go mod download).
+* Uses the official Go image to compile your Go app.
+* Sets up a working directory.
+* Downloads dependencies (`go mod download`).
 * Copies your code into the container.
 * Builds your Go app for the target OS and architecture, outputting a binary called 'blogo'.
 
@@ -71,9 +74,9 @@ Let's explain what this does... The Dockerfile has two stages
 * Optionally copies default content for the app.
 * Exposes port 3999 for your app.
 * Runs the app as a non-root user for security.
-* Starts the app with the ENTRYPOINT
+* Starts the app with the ENTRYPOINT.
 
-At this point we are able to build a container
+At this point, we are able to build a container.
 
 Let's now create a `docker-compose.yaml` file that makes it easy for us to spin up the container and test that it is working.
 
@@ -93,22 +96,22 @@ services:
       - "5040:3999"
 ```
 
-This Docker compose file does the follow
+This Docker Compose file does the following:
 
-* Create a new service call `blog`
-* Run the build command
-* Ensure that the blog will restart unless we stop it
+* Creates a new service called `blog`
+* Runs the build command
+* Ensures that the blog will restart unless we stop it
 * Maps port 5040 on the outside to 3999 on the inside of the container
 
-It is worth noting that you can also set this to `3999:3999` as well. You would need to ensure you don't fire up your development server while your container is running. Ultimately do whatever work's best for you.
+It is worth noting that you can also set this to `3999:3999` as well. You would need to ensure you don't fire up your development server while your container is running. Ultimately, do whatever works best for you.
 
-Let's also create a `.dockerignore` file. This will ensure our images are smaller and keeps out the junk.
+Let's also create a `.dockerignore` file. This will ensure our images are smaller and keep out the junk.
 
 ```bash
 touch .dockerignore
 ```
 
-Add the following (make it apply towards your project)
+Add the following (make it apply to your project):
 
 ```text
 # Git
@@ -148,14 +151,14 @@ docker-compose.override.yml
 .env.*
 ```
 
-With both the `Dockerfile` and the `docker-compose.yaml` in place, lets try to build the container (note this assumes you have Docker installed on your system). Run the following command.
+With both the `Dockerfile` and the `docker-compose.yaml` in place, let's try to build the container (note this assumes you have Docker installed on your system). Run the following commands:
 
 ```bash
 docker build -t blog:local . #this may take a bit
 docker compose up -d # start the compose file and disconnect
 ```
 
-If everything functioned properly, we should have a working container. If your server is running on the same port defined in your `docker-compose.yaml`, you need to stop it. To see if your server is running run the following commands.
+If everything functioned properly, we should have a working container. If your server is running on the same port defined in your `docker-compose.yaml`, you need to stop it. To see if your server is running, run the following command:
 
 ```bash
 docker ps -a # should show all running containers (may require sudo)
@@ -163,7 +166,7 @@ docker ps -a # should show all running containers (may require sudo)
 
 ## Github Actions
 
-At this point we should push our changes to the repo. The end goal here is to get all changes that we make to the blog to be reflected in our container image. There are a few ways to do this but one common one is to use Github Actions.
+At this point, we should push our changes to the repo. The end goal here is to get all changes that we make to the blog to be reflected in our container image. There are a few ways to do this, but one common way is to use GitHub Actions.
 
 Create a `.github` directory at the root of your project.
 
@@ -218,18 +221,18 @@ jobs:
 
 ```
 
-Now let's review the `publish.yml` file and what it does.
+Now let's review the `publish.yml` file and what it does:
 
-1. Every time you push code into the main branch it will run
-2. It will check out your code
-3. Setup the build tools needed for Docker images for all sorts of builds
-4. Logs into Github Container Registry using your Github credentials
-5. Builds your Docker image for multiple platforms
-6. Pushes the built image to GHCR with two tags: latest and a unique tag for each commit
+1. Every time you push code into the main branch, it will run.
+2. It will check out your code.
+3. Sets up the build tools needed for Docker images for all sorts of builds.
+4. Logs into GitHub Container Registry using your GitHub credentials.
+5. Builds your Docker image for multiple platforms.
+6. Pushes the built image to GHCR with two tags: `latest` and a unique tag for each commit.
 
-Commit these changes up to Github and check the repo. You should see a green light near the title of the repo. This will show the status of the Github Action and if you ran into any errors. If you were succesful, you should now have your container in the Github Container registry.
+Commit these changes up to GitHub and check the repo. You should see a green light near the title of the repo. This will show the status of the GitHub Action and if you ran into any errors. If you were successful, you should now have your container in the GitHub Container Registry.
 
-You can now change your local `docker-compose.yml` file to reflect it being in the container registry.
+You can now change your local `docker-compose.yml` file to reflect it being in the container registry:
 
 ```yaml
 services:
@@ -240,6 +243,6 @@ services:
     restart: unless-stopped
 ```
 
-You should now be able to deploy this project on whatever server you want, as long as it has Docker and Compose on it. Simply SSH into the server, create a new `docker-compose.yml` file and add the contents above. Bring up the stack and you should be off to the races.
+You should now be able to deploy this project on whatever server you want, as long as it has Docker and Compose on it. Simply SSH into the server, create a new `docker-compose.yml` file, and add the contents above. Bring up the stack and you should be off to the races.
 
 I hope you enjoyed!
