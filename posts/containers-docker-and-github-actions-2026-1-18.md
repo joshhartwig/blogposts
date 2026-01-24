@@ -9,10 +9,18 @@ tags:
   - "DevOps"
 ---
 
+This is a continuation of the previous series of posts here:
+
+[Part 1](https://joshbuildstuff.com/posts/building-a-blog-in-go-part-1-2026-1-18)
+[Part 2](https://joshbuildstuff.com/posts/building-a-blog-in-go-part-2-2026-1-18)
+[Part 3](https://joshbuildstuff.com/posts/building-a-blog-in-go-part-3-2026-1-18)
+[Part 4](https://joshbuildstuff.com/posts/building-a-blog-in-go-part-4-2026-1-18)
+
+That being said, you certainly do not need to do all the previous parts for this post to be beneficial. This part can apply to any sort of project but may require some tweaks if you are using another language. With that said...
 
 Time to make this easy to deploy
 
-You put in all the time and effort to build this thing, so why not take a little bit more time and effort to make it easy to deploy? In this post, we are going to turn this project into a 'distroless' Docker container, make sure it works locally, then create a pipeline that ensures all commits to main are replicated to our Docker image in the GitHub Container Registry. The end result is that you can create a Docker Compose file on any type of server and have your container running locally within 30 seconds. Sound good? Let's get going.
+We put in all the time and effort to build this thing, so why not take a little bit more time and effort to make it easy to deploy? In this post, we are going to turn this project into a 'distroless' Docker container, make sure it works locally, then create a pipeline that ensures all commits to main are replicated to our Docker image in the GitHub Container Registry. The end result is that you can create a Docker Compose file on any type of server and have your container running locally within 30 seconds. Sound good? Let's get going.
 
 Let's start by creating a new Dockerfile.
 
