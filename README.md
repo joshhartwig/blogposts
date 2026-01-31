@@ -10,4 +10,4 @@ All blog post files are located in the `/posts/{slug}` directory.
 ## Version History
 
 1.0: Initial commit, each post is under the posts directory. The containerized Go app will mount the posts directory and then reach each .md file.
-1.01: Updated to support folder per post structure to support images colocated with markdown posts, fixed shell script to ensure new posts are created as 'draft' = true
+1.01: Updated to support folder per post structure to support images colocated with markdown posts, fixed shell script to ensure new posts are created as 'draft' = true. Changed each post to index to support folder per post.

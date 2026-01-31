@@ -3,7 +3,7 @@
 DATE="2026-1-18"
 SLUG="default-post-${DATE}"
 FOLDER="$SLUG"
-FILENAME="${FOLDER}/${SLUG}.md"
+FILENAME="${FOLDER}/index.md"
 
 mkdir -p "$FOLDER"
 
