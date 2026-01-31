@@ -2,16 +2,32 @@
 
 DATE="2026-1-18"
 
-for file in *.md; do
-  # Skip if no .md files are found
-  [ -e "$file" ] || continue
+for dir in */; do
+  # Skip if no directories are found
+  [ -d "$dir" ] || continue
 
-  # Remove extension, convert to lowercase, replace spaces/underscores with dashes
-  base=$(basename "$file" .md)
-  newbase=$(echo "$base" | tr '[:upper:]' '[:lower:]' | tr ' _' '-')
-  newname="${newbase}-${DATE}.md"
+  # Remove trailing slash
+  dirname="${dir%/}"
 
-  # Rename the file
-  mv "$file" "$newname"
-  echo "Renamed $file -> $newname"
+  # Find the .md file in the directory
+  mdfile=$(find "$dirname" -maxdepth 1 -name "*.md" -type f | head -1)
+  [ -n "$mdfile" ] || continue
+
+  # Get base name without extension
+  base=$(basename "$mdfile" .md)
+
+  # Convert to lowercase, replace spaces/underscores with dashes
+  newslug=$(echo "$base" | tr '[:upper:]' '[:lower:]' | tr ' _' '-')
+  newslug="${newslug%-${DATE}}-${DATE}"
+
+  # Skip if already correctly named
+  [ "$dirname" = "$newslug" ] && continue
+
+  # Rename folder and file
+  mv "$dirname" "$newslug"
+  if [ -f "$newslug/$base.md" ]; then
+    mv "$newslug/$base.md" "$newslug/$newslug.md"
+  fi
+
+  echo "Renamed $dirname/ -> $newslug/"
 done

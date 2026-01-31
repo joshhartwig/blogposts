@@ -1,14 +1,18 @@
 #!/bin/bash
 
 DATE="2026-1-18"
-FILENAME="default-post-${DATE}.md"
+SLUG="default-post-${DATE}"
+FOLDER="$SLUG"
+FILENAME="${FOLDER}/${SLUG}.md"
+
+mkdir -p "$FOLDER"
 
 cat > "$FILENAME" <<EOF
 ---
-title: "Automating Deployment with Docker, Containers and Github Actions"
+title: "New Post"
 date: ${DATE}
-summary: "We have built this blog but lets make it easy to deploy on a VPS, Linux server or even another development box. We are going to containerize the blog, create a Docker Compose to test locally and then create a github action that updates the container registry on every push to main"
-draft: false
+summary: "Fill me in with a brief summary of the post."
+draft: true
 tags:
   - "#Go"
   - "#Development"
@@ -32,4 +36,4 @@ fmt.Println("Hello, world!")
 \`\`\`
 EOF
 
-echo "Created $FILENAME"
+echo "Created $FOLDER/ with $FILENAME"
