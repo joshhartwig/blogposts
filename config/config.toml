@@ -1,0 +1,9 @@
+site_title = "Josh Build Stuff"
+base_url = "https://joshbuildstuff.com"
+theme = "default"
+posts_per_page = 5
+content_dir = "/content"
+
+[author]
+name = "Josh Hartwig"
+bio = "An unserious blog..."
